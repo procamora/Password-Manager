@@ -2,6 +2,18 @@
 __pycache__/
 *.py[cod]
 
+
+
+*.lock
+*.gpg
+gnupg.pyc
+random_seed
+
+
+
+
+
+
 # C extensions
 *.so
 
