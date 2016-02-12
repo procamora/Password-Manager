@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+import os
 from pprint import pprint
 #http://www.saltycrane.com/blog/2011/10/python-gnupg-gpg-example/
-import os
+
 import gnupg
+from easygui import enterbox, passwordbox, codebox, msgbox
 
 class Objetito:
 	def __init__(self, passwd, email=None, fich=None):
@@ -19,7 +21,7 @@ class Objetito:
 	def init(self, passwd=None):
 		if passwd != None:
 			self.password = passwd
-		print self.password
+		print(self.password)
 
 		a = self._CompruebaPasswd()
 		if a == self.ErrorDecrypted:
@@ -78,7 +80,7 @@ class Objetito:
 		import_result = self.gpg.import_keys(key_data)
 		#print import_result
 		if Debug == True:
-			print import_result.summary()
+			print(import_result.summary())
 			pprint(import_result.results)
 
 
@@ -87,12 +89,12 @@ class Objetito:
 		encrypted_data = self.gpg.encrypt(unencrypted, self.mail, always_trust=True)        # always_trust=True evita el "here is no assurance this key belongs to the named user"
 		self.encrypted_string = str(encrypted_data)
 		if Debug == True:
-			print 'encrypt'
-			print 'ok: ', self.encrypted_data.ok
-			print 'status: ', self.encrypted_data.status
-			print 'stderr: ', self.encrypted_data.stderr
-			print 'unencrypted_string: ', unencrypted
-			print 'encrypted_string: ', self.encrypted_string
+			print('encrypt')
+			print('ok: ', self.encrypted_data.ok)
+			print('status: ', self.encrypted_data.status)
+			print('stderr: ', self.encrypted_data.stderr)
+			print('unencrypted_string: ', unencrypted)
+			print('encrypted_string: ', self.encrypted_string)
 
 		if encrypted_data.ok == False:
 			return self.ErrorEncrypted
@@ -104,14 +106,14 @@ class Objetito:
 		self.decrypted_data = self.gpg.decrypt(encrypted, passphrase=self.password, always_trust=True)
 		#print self.gpg.list_keys()[0]
 		if Debug == True:
-			print 'Decrypt'
-			print 'ok: ', self.decrypted_data.ok
-			print 'status: ', self.decrypted_data.status
+			print('Decrypt')
+			print('ok: ', self.decrypted_data.ok)
+			print('status: ', self.decrypted_data.status)
 			try:
-				print 'stderr: ', self.decrypted_data.stderr  # da error por codificacion
+				print('stderr: ', self.decrypted_data.stderr)  # da error por codificacion
 			except:
 				pass
-			print 'decrypted string: ', self.decrypted_data.data
+			print('decrypted string: ', self.decrypted_data.data)
 
 		if self.decrypted_data.ok == False:
 			return self.ErrorDecrypted
@@ -123,13 +125,13 @@ class Objetito:
 		#pprint(gpg.list_keys())
 		for i in self.gpg.list_keys():
 			if Debug == True:
-				print i['fingerprint']
+				print(i['fingerprint'])
 			self.gpg.delete_keys(i['fingerprint'], True)
 			self.gpg.delete_keys(i['fingerprint'])
 
 	def ListKeys(self):
 		for i in self.gpg.list_keys():
-			print i['fingerprint']
+			print(i['fingerprint'])
 
 	def CreaFicheroPasswd(self):
 		'''crea fichero con la pass encriptada, se usara para desdencriptarlo y conformar que tenemos la pass correcta'''
@@ -141,7 +143,6 @@ class Objetito:
 
 
 def main():
-	from easygui import enterbox, passwordbox, codebox, msgbox
 
 	passwd ='123456789A1'
 	email = 'prueba@gmail.com'
@@ -150,20 +151,21 @@ def main():
 
 	hola = Objetito(passwd, email, fich)
 	while hola.init(passwd) == 'Fail decrypted':
-		print 'repetir pass'
+		print('repetir pass')
 		passwd = '123456789A'
 
-	print 'Encriptar'
+	print('Encriptar')
 	enc = hola.EncryptString(texto)
-	print enc
+	print(enc)
 
-	print 'Desencriptar'
+	print('Desencriptar')
 	des = hola.DecryptString(enc)
-	print des
+	print(des)
 
 	#hola.ImportKeys()
 	#hola.ListKeys()
 	#hola.DeletingKeys()
 
-main()
+if __name__ == '__main__':
+	main()
 

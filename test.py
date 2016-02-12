@@ -28,7 +28,7 @@ def ImportKeys(fichero=None, Debug=False):
 	key_data = open(fichero).read()
 	import_result = gpg.import_keys(key_data)
 	if Debug == True:
-		print import_result.summary()
+		print(import_result.summary())
 		pprint(import_result.results)
 
 
@@ -37,12 +37,12 @@ def EncryptString(unencrypted_string=None, mail=None, Debug=False):
 	encrypted_data = gpg.encrypt(unencrypted_string, mail, always_trust=True)        # always_trust=True evita el "here is no assurance this key belongs to the named user"
 	encrypted_string = str(encrypted_data)
 	if Debug == True:
-		print 'encrypt'
-		print 'ok: ', encrypted_data.ok
-		print 'status: ', encrypted_data.status
-		print 'stderr: ', encrypted_data.stderr
-		print 'unencrypted_string: ', unencrypted_string
-		print 'encrypted_string: ', encrypted_string
+		print('encrypt')
+		print('ok: ', encrypted_data.ok)
+		print('status: ', encrypted_data.status)
+		print('stderr: ', encrypted_data.stderr)
+		print('unencrypted_string: ', unencrypted_string)
+		print('encrypted_string: ', encrypted_string)
 
 	if encrypted_data.ok == False:
 		return 'Fail encrypted'
@@ -53,14 +53,14 @@ def EncryptString(unencrypted_string=None, mail=None, Debug=False):
 def DecryptString(encrypted_string=None, password=None, Debug=False):
 	decrypted_data = gpg.decrypt(encrypted_string, passphrase=password)
 	if Debug == True:
-		print 'Decrypt'
-		print 'ok: ', decrypted_data.ok
-		print 'status: ', decrypted_data.status
+		print('Decrypt')
+		print('ok: ', decrypted_data.ok)
+		print('status: ', decrypted_data.status)
 		try:
-			print 'stderr: ', decrypted_data.stderr  # da error por codificacion
+			print('stderr: ', decrypted_data.stderr)  # da error por codificacion
 		except:
 			pass
-		print 'decrypted string: ', decrypted_data.data
+		print('decrypted string: ', decrypted_data.data)
 
 	if decrypted_data.ok == False:
 		return 'Fail decrypted'
@@ -72,7 +72,7 @@ def DeletingKeys(Debug=False):
 	#pprint(gpg.list_keys())
 	for i in gpg.list_keys():
 		if Debug == True:
-			print i['fingerprint']
+			print(i['fingerprint'])
 		gpg.delete_keys(i['fingerprint'], True)
 		gpg.delete_keys(i['fingerprint'])
 
@@ -86,7 +86,7 @@ def PrimeraVez(password, email, fichero, texto):
 	key = GenerateKeys(password=password, email=email)
 	CreaFicheroPasswd(password)
 	ExportKeys(key, fichero)
-	print DecryptString(encrypted_string=EncryptString(unencrypted_string=texto, mail=email), password=password)
+	print(DecryptString(encrypted_string=EncryptString(unencrypted_string=texto, mail=email), password=password))
 	DeletingKeys()
 
 
@@ -101,8 +101,8 @@ def InicioSegundaVez(password, email, fichero):
 def SegundaVez(password, email, fichero, texto):
 	ImportKeys(fichero)
 	key = gpg.list_keys()[0]
-	print  gpg.list_keys()
-	print DecryptString(encrypted_string=EncryptString(unencrypted_string=texto, mail=email), password=password)
+	print(gpg.list_keys())
+	print(DecryptString(encrypted_string=EncryptString(unencrypted_string=texto, mail=email), password=password))
 	DeletingKeys()
 
 
@@ -115,7 +115,7 @@ def main():
 
 	#PrimeraVez(passwd, email, fich, texto)
 
-	print InicioSegundaVez(passwd, email, fich)
+	print(InicioSegundaVez(passwd, email, fich))
 
 	SegundaVez(password=InicioSegundaVez(passwd, email, fich), email=email, fichero=fich, texto=texto)
 
